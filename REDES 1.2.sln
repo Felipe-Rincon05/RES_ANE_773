@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34714.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REDES 1.2", "REDES 1.2.csproj", "{3014FB60-F45D-41DE-A2BC-C207B17A156B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3014FB60-F45D-41DE-A2BC-C207B17A156B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3014FB60-F45D-41DE-A2BC-C207B17A156B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3014FB60-F45D-41DE-A2BC-C207B17A156B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3014FB60-F45D-41DE-A2BC-C207B17A156B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B8A8BF19-5347-4171-9E43-A01996D40A4B}
+	EndGlobalSection
+EndGlobal

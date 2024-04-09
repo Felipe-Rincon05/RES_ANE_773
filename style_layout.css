@@ -1,0 +1,92 @@
+﻿@media print {
+    .pire{
+        display: none;
+    }
+
+    .P1000W{
+        display:none;
+    }
+
+    .Antena_{
+        display:none;
+    }
+
+    .Me30MHz{
+        display: none;
+    }
+
+    .IMT_{
+        display: none;
+    }
+
+    .com_{
+        display: none;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* 100% del viewport height */
+    }
+
+    .circle-container {
+        position: relative;
+        width: 400px; /* Ancho del contenedor */
+        height: 400px; /* Alto del contenedor */
+    }
+
+    .circle {
+        border-radius: 50%;
+        border: 2px solid black;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .small-circle {
+        width: 200px; /* Tamaño pequeño */
+        height: 200px;
+        background-color: red; /* Color rojo */
+    }
+
+    .medium-circle {
+        width: 400px; /* Tamaño mediano */
+        height: 400px;
+        background-color: yellow; /* Color amarillo */
+    }
+
+    .large-circle {
+        width: 800px; /* Tamaño grande */
+        height: 800px;
+        background-color: green; /* Color verde */
+    }
+
+    .centered-dot {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1; /* Asegurar que el punto esté sobre las circunferencias */
+    }
+
+        .centered-dot img {
+            width: 50px; /* Tamaño de la imagen */
+            height: 50px;
+        }
+
+    .circle-text {
+        color: black; /* Color del texto */
+        font-size: 14px; /* Tamaño del texto */
+        font-weight: bold; /* Peso del texto */
+        text-align: center; /* Alineación del texto */
+        position: absolute; /* Posicionamiento absoluto */
+        top: 88%; /* Ubicación vertical en el 50% del círculo */
+        left: 50%; /* Ubicación horizontal en el 50% del círculo */
+        transform: translate(-50%, -50%); /* Centrar el texto */
+    }
+}

@@ -1,0 +1,403 @@
+﻿@model List<REDES_1._2.Controllers.Comentario>
+@using System.Globalization
+@{
+    ViewBag.Title = "Index";
+    // Crear la lista de opciones
+    var opciones = new List<SelectListItem>
+{
+        new SelectListItem { Value = "SI", Text = "SI" },
+        new SelectListItem { Value = "NO", Text = "NO" },
+    };
+
+}
+
+<head>
+    <style>
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* 100% del viewport height */
+        }
+
+        .circle-container {
+            position: relative;
+            width: 400px; /* Ancho del contenedor */
+            height: 400px; /* Alto del contenedor */
+        }
+
+        .circle {
+            border-radius: 50%;
+            border: 2px solid black;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .small-circle {
+            width: 200px; /* Tamaño pequeño */
+            height: 200px;
+            background-color: red; /* Color rojo */
+        }
+
+        .medium-circle {
+            width: 400px; /* Tamaño mediano */
+            height: 400px;
+            background-color: yellow; /* Color amarillo */
+        }
+
+        .large-circle {
+            width: 800px; /* Tamaño grande */
+            height: 800px;
+            background-color: green; /* Color verde */
+        }
+
+        .centered-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1; /* Asegurar que el punto esté sobre las circunferencias */
+        }
+
+            .centered-dot img {
+                width: 50px; /* Tamaño de la imagen */
+                height: 50px;
+            }
+
+        .circle-text {
+            color: black; /* Color del texto */
+            font-size: 14px; /* Tamaño del texto */
+            font-weight: bold; /* Peso del texto */
+            text-align: center; /* Alineación del texto */
+            position: absolute; /* Posicionamiento absoluto */
+            top: 88%; /* Ubicación vertical en el 50% del círculo */
+            left: 50%; /* Ubicación horizontal en el 50% del círculo */
+            transform: translate(-50%, -50%); /* Centrar el texto */
+        }
+    </style>
+    <link href="@Url.Content("~/style_layout.css")" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="row justify-content-center">
+        <!-- Informacion de la res773 -->
+        <div class="col-md-7" style="background-color: #DCDCDC; border-radius: 20px; padding: 20px; margin: 5px;">
+            <h3 style="color:#1F618D;">INFORMACIÓN RESOLUCIÓN 773</h3>
+            <div class="text-black text-start" style="padding: 20px; margin: 5px; min-height: 600px; overflow-y: auto; max-height: 650px;">
+                <div class="pire" style="padding: 20px; margin: 5px; background-color: #E5E5E5;">
+                    <h3>Potencia Isotrópica Radiada Equivalente (PIRE)</h3>
+                    <br />
+                    <!-- DATOS DE LA SEÑAL -->
+                    <div>
+                        @using (Html.BeginForm("Pire", "Home", FormMethod.Post))
+                        {
+                            <div class="form-group">
+                                <label for="input1">Potencia de la señal:</label>
+                                @Html.TextBox("txt_potencia", Session["potencia_senal"], new { @type = "number", @class = "form-control", @placeholder = "Ingrese el dato en dBm", @autocomplete = "off", @step = "any", @pattern = "^[0-9]+(\\.[0-9]{1,2})?$" })
+                            </div>
+                            <br />
+                            <div class="form-group">
+                                <label for="input2">Ganancia de la señal:</label>
+                                @Html.TextBox("txt_ganancia", Session["ganancia_senal"], new { @type = "text", @class = "form-control decimal-positivo", @placeholder = "Ingrese el dato en dBi", @autocomplete = "off", @step = "any" })
+                            </div>
+                            <br />
+                            <div class="form-group">
+                                <label for="input3">Latencia de la señal dada por el cable:</label>
+                                @Html.TextBox("txt_latencia", Session["latencia_senal"], new { @type = "text", @class = "form-control decimal-positivo", @placeholder = "Ingrese el dato en dB", @autocomplete = "off", @step = "any" })
+                            </div>
+                            <br />
+                            <button type="submit" class="btn btn-primary" id="btnSubmit">Enviar</button>
+                            <br />
+                            <label style="color: #0A7B18; margin:5px;">@Session["pire"]</label>
+                            <label class="text-danger" style="margin:5px;">@Session["error_señal"]</label>
+                        }
+                    </div>
+                </div>
+                <!-- PREGUNTA A MAS DE 1000W -->
+                <div id="1000W" class="P1000W d-none" style="padding: 20px; margin: 5px; background-color: #D2D2D2;">
+                    <h3>Emisoras cercanas</h3>
+                    <br />
+                    <div class="justify-content-center">
+                        @using (Html.BeginForm("P1000W", "Home", FormMethod.Post))
+                        {
+                            <div class="form-group">
+                                <label>Tiene alguna antena con PIRE mayor o igual a 1000W a menos de 100m:</label>
+                                <br />
+                                @Html.DropDownList("txt_emisora", new SelectList(opciones, "Value", "Text", Session["respuesta_1000W"]), "Seleccione una opcion...", new { @class = "form-control" })
+                            </div>
+                            <br />
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                            <br />
+                        }
+                        <label class="text-danger" style="margin:5px;">@Session["err_p1000"]</label>
+                    </div>
+                </div>
+                <!-- DATOS DE LA ANTENA -->
+                <div id="antena" class="Antena_ d-none" style="padding: 20px; margin: 5px; background-color: #E5E5E5;">
+                    <h3>Calculo de minima distancia</h3>
+                    <br />
+                    @using (Html.BeginForm("Distancia", "Home", FormMethod.Post))
+                    {
+                        <div class="form-group">
+                            <label for="input1">Frecuencia de la antena:</label>
+                            @Html.TextBox("txt_frecuencia", Session["frecuencia_antena"], new { @type = "text", @class = "form-control decimal-positivo", @placeholder = "Ingrese el dato en MHz", @autocomplete = "off", @step = "any" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label for="input2">Altura de la antena:</label>
+                            @Html.TextBox("txt_altura", Session["altura_antena"], new { @type = "text", @class = "form-control decimal-positivo", @placeholder = "Ingrese el dato en m", @autocomplete = "off", @step = "any" })
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <label for="input3">Longitud o diametro de la antena:</label>
+                            @Html.TextBox("txt_tamano", Session["tamano_antena"], new { @type = "text", @class = "form-control decimal-positivo", @placeholder = "Ingrese el dato en m", @autocomplete = "off", @step = "any" })
+                        </div>
+                        <br />
+                        <button type="submit" class="btn btn-primary" id="btnSubmit">Enviar</button>
+                        <br />
+                        <label class="text-danger" style="margin:5px;">@Session["err_antena"]</label>
+                    }
+
+                </div>
+                <!--MENOS DE 30MHz-->
+                <div id="Men30" class="Me30MHz d-none" style="padding: 20px; margin: 5px; background-color: #D2D2D2;">
+                    <h3>Frecuencias menores a 30MHz</h3>
+                    <br />
+                    <div>
+                        @using (Html.BeginForm("Men30", "Home", FormMethod.Post))
+                        {
+                            <div class="row">
+                                <h4 class="text-center">Distancia poblacional</h4>
+                                <div class="col-md-5" style="padding:20px; margin:5px;">
+                                    <div class="form-group">
+                                        <label>Intensidad de campo E incidente:</label>
+                                        @Html.TextBox("txt_E_pobla", Session["E_pobla"], new { @type = "text", @class = "form-control", @placeholder = "Unidades en Vm⁻¹", @autocomplete = "off", @step = "any", @pattern = "^[0-9]+(\\.[0-9]{1,2})?$" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Intensidad de campo H incidente:</label>
+                                        @Html.TextBox("txt_H_pobla", Session["H_pobla"], new { @type = "text", @class = "form-control", @placeholder = "Unidades en Am⁻¹", @autocomplete = "off", @step = "any", @pattern = "^[0-9]+(\\.[0-9]{1,2})?$" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6 m-auto">
+                                    <label style="margin:5px;">@Session["recom_E_pobla"]</label>
+                                    <label style="margin:5px;">@Session["recom_H_pobla"]</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <h4 class="text-center">Distancia ocupacional</h4>
+                                <div class="col-md-5" style="padding:20px; margin:5px;">
+                                    <div class="form-group">
+                                        <label>Intensidad de campo E incidente:</label>
+                                        @Html.TextBox("txt_E_ocupa", Session["E_ocupa"], new { @type = "text", @class = "form-control", @placeholder = "Unidades en Vm⁻¹", @autocomplete = "off", @step = "any", @pattern = "^[0-9]+(\\.[0-9]{1,2})?$" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Intensidad de campo H incidente:</label>
+                                        @Html.TextBox("txt_H_ocupa", Session["H_ocupa"], new { @type = "text", @class = "form-control", @placeholder = "Unidades en Am⁻¹", @autocomplete = "off", @step = "any", @pattern = "^[0-9]+(\\.[0-9]{1,2})?$" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6 m-auto">
+                                    <label style="margin:5px;">@Session["recom_E_ocupa"]</label>
+                                    <label style="margin:5px;">@Session["recom_H_ocupa"]</label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                        }
+                    </div>
+                    <label class="text-danger" style="margin:5px;">@Session["err_Min30"]</label>
+                    <label class="text-success" style="margin:5px;">@Session["acep_Min30"]</label>
+                </div>
+                <!--SERVICIOS IMT-->
+                <div id="servicio_imt" class="IMT_ d-none" style="padding: 20px; margin: 5px; background-color: #D2D2D2;">
+                    <h3>Servicios IMT</h3>
+                    <br />
+                    <div class="justify-content-center">
+                        @using (Html.BeginForm("May30", "Home", FormMethod.Post))
+                        {
+                            <div class="form-group">
+                                <label>Maneja servicios IMT (telecomunicaciones móviles internacionales):</label>
+                                @Html.DropDownList("txt_imt", new SelectList(opciones, "Value", "Text", Session["respuesta_may30"]), "Seleccione una opcion...", new { @class = "form-control" })
+                            </div>
+                            <br />
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                        }
+                        <br />
+                        <label class="text-danger" style="margin:5px;">@Session["err_may30"]</label>
+                    </div>
+                </div>
+                <!-- GRAFICAS -->
+                @using (Html.BeginForm("ExportarPDF", "Home", FormMethod.Post))
+                {
+                    <div id="graficas" class="grafica d-none justify-content-center text-center" style="padding: 20px; margin: 5px; background-color: #E5E5E5;">
+                        <h3>Grafica de la distancia normativa</h3>
+                        <br />
+                        <!--<img src="~/img/GRAFICA_TEMP_1.jpg" style="width:100%; height:100%;" alt="..." /> -->
+                        <div class="container">
+                            <div class="circle-container">
+                                <!-- <div class="circle large-circle">
+                        <div class="circle-text">80m</div>
+                    </div> -->
+                                <div class="circle medium-circle">
+                                    <div class="circle-text">@Session["g_poblacional"]</div>
+                                </div>
+                                <div class="circle small-circle">
+                                    <div class="circle-text">@Session["g_ocupacional"]</div>
+                                </div>
+                                <div class="centered-dot">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/5440/5440251.png" alt="Icono">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label style="margin: 5px;">
+                                En la grafica se evidencia la distancia y el tipo de señalización que se de debe aplicar en este caso.
+                                Cabe aclarar, donde aparece la distancia "0 m", quiere decir que no es necesario ese tipo de señalización.
+                            </label>
+                            <center>
+                                <button class="btn btn-success" type="submit">Imprimir</button>
+                            </center>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <!-- Comentarios de los usuarios -->
+        <div class="com_ col-md-3 col-sm-12 text-black" style="display: block; border-radius: 20px; padding: 10px; margin: 5px; background-color: #ABABAB ">
+            <h3 style="color: #0A7B18;">COMENTARIOS</h3>
+            @using (Html.BeginForm("GuardarComentario", "Home", FormMethod.Post))
+            {
+                <div class="form-group d-flex justify-content-center" style="display: flex; height: 100%;">
+                    <div><textarea name="txt_comentario" type="text" class="form-control" style="margin-top: 10px; resize:none; height: 50%;" placeholder="Escribe aqui..."></textarea></div>
+                    <div style="width: 10px;"></div>
+                    <div><button type="submit" class="btn btn-outline" style="margin-top: 10px; width: 100%; border-color: #0A7B18; --bs-btn-hover-bg: #0A7B18 ">Enviar</button></div>
+                </div>
+            }
+            <div>
+                <div class="chat-container bg-transparent text-lg-start" style="word-wrap: break-word; border-radius: 20px; padding: 20px; margin: 5px; min-height: 600px; overflow-y: auto; max-height: 600px;">
+                    @if (Model != null)
+                    {
+                        for (int i = (Model.Count - 1); i >= 0; i--)
+                        {
+                            <div class="row">
+                                <div class="col-6">
+                                    <p style="color: #1F618D;">@Model[i].nombre_persona</p>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <p style="color: #1F618D; font-size:11px;">@Model[i].fecha</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <p>@Model[i].comentario</p>
+                                </div>
+                            </div>
+                            <hr />
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/4b5617367e.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.0/html2pdf.bundle.min.js"></script>
+
+</body>
+
+<script>
+
+    window.onload = function () {
+        antena();
+        P1000();
+        Men30();
+        May30();
+        grafica();
+    };
+
+    $(document).ready(function () {
+        $('.decimal-positivo').on('keypress', function (e) {
+            // Obtener el código ASCII de la tecla presionada
+            var keycode = e.keyCode || e.which;
+
+            // Verificar si la tecla presionada es "-" o la letra "e" y prevenir su escritura
+            if (keycode === 45 || keycode === 101 || keycode === 69) {
+                e.preventDefault();
+            }
+        });
+
+        // Agregar la validación en tiempo real
+        $('.decimal-positivo').on('input', function () {
+            var valor = $(this).val();
+
+            // Remover cualquier signo "-" o la letra "e" que se encuentren en el valor
+            valor = valor.replace(/[-e]/g, '');
+
+            // Verificar si el valor es un número decimal válido y positivo
+            if (!/^\d*\.?\d*$/.test(valor) || parseFloat(valor) < 0) {
+                $(this).val('');
+            }
+        });
+    });
+
+    function antena() {
+        var flagPire = '@Session["flag_pire"]';
+        if (flagPire === 'true') {
+            document.getElementById('antena').classList.remove('d-none');
+        }
+    }
+
+    function P1000() {
+        var flag1000 = '@Session["flag_1000"]';
+        if (flag1000 === 'true') {
+            document.getElementById('1000W').classList.remove('d-none');
+        }
+
+    }
+
+    function Men30() {
+        var flag30 = '@Session["men_30"]';
+        if (flag30 === 'true') {
+            document.getElementById('Men30').classList.remove('d-none');
+        }
+    }
+
+    function May30() {
+    var flagm30 = '@Session["may_30"]';
+        if (flagm30 === 'true') {
+            document.getElementById('servicio_imt').classList.remove('d-none');
+        }
+    }
+
+    function grafica() {
+    var flagGrafica = '@Session["flag_grafica"]';
+        if (flagGrafica === 'true') {
+            document.getElementById('graficas').classList.remove('d-none');
+        }
+    }
+
+    /*$.validator.addMethod("decimalPositivo", function (value, element) {
+        return this.optional(element) || (value >= 0 && !isNaN(value));
+    }, "Ingrese un número decimal positivo"); */
+
+    function exportarPDF() {
+        const element = document.getElementById('graficas');
+        html2pdf().from(element).save();
+    }
+
+</script>
